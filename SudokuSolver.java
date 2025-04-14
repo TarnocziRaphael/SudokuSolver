@@ -1,20 +1,11 @@
+import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class SudokuSolver {
     private static final int BOX_SIZE = 3;
     private static final int GRID_SIZE = BOX_SIZE *  BOX_SIZE;
     public static void main(String[] args) {
-        int[][] board = {
-            {9, 1, 3, 5, 0, 0, 7, 8, 0},
-            {4, 6, 0, 0, 2, 0, 0, 0, 9},
-            {8, 0, 0, 1, 3, 0, 0, 0, 6},
-            {7, 0, 8, 0, 0, 2, 0, 9, 4},
-            {2, 0, 9, 0, 0, 6, 0, 0, 0},
-            {6, 0, 0, 7, 0, 5, 0, 3, 0},
-            {0, 9, 0, 0, 4, 0, 8, 7, 1},
-            {0, 0, 4, 2, 7, 0, 0, 0, 0},
-            {0, 0, 6, 0, 0, 8, 4, 0, 3},
-        };
+        int[][] board = readBoardFromConsole();
 
         if (solve(board)) {
             printResult(board);
@@ -22,6 +13,29 @@ public class SudokuSolver {
             System.out.println("Oops :(");
         }
 
+    }
+
+    private static int[][] readBoardFromConsole() {
+        Scanner scanner = new Scanner(System.in);
+        int[][] board = new int[GRID_SIZE][GRID_SIZE];
+
+        System.out.println("Bitte gib das Sudoku ein (Zeile für Zeile, 9 Zahlen, 0 für leer):");
+        for (int row = 0; row < GRID_SIZE; row++) {
+            while (true) {
+                System.out.print("Zeile " + (row + 1) + ": ");
+                String line = scanner.nextLine().trim().replaceAll("\\s+", "");
+                if (line.length() == GRID_SIZE && line.matches("\\d{" + GRID_SIZE + "}")) {
+                    for (int col = 0; col < GRID_SIZE; col++) {
+                        board[row][col] = Character.getNumericValue(line.charAt(col));
+                    }
+                    break;
+                } else {
+                    System.out.println("Ungültige Eingabe. Bitte genau 9 Ziffern (0–9) eingeben.");
+                }
+            }
+        }
+        scanner.close();
+        return board;
     }
 
     private static void printResult(int[][] board) {
